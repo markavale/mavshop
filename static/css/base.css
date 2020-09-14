@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+
+
+/* section for styling navbar */
+.navbar {
+}
+
+/* Snippet style for wrapping elements */
+#wrapper {
+  width: 980px;
+  text-align: left;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+.side-bar {
+  font-size: 1em;
+}
+
+/* footer section */
+.footer {
+  font-size: 0.9em;
+}
+
+/* h tags to p tags styling */
+h1 {
+  font-size: 2.2em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.8em;
+}
+
+h4 {
+  font-size: 1.6em;
+}
+
+h5 {
+  font-size: 1.4em;
+}
+
+p {
+  font-size: 1.2em;
+}
+
+/* extra styles for floating elements */
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+/*  Extra small devices (portrait phones, less than 576px)
+ No media query for `xs` since this is the default in Bootstrap */
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+}
