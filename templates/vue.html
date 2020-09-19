@@ -1,0 +1,161 @@
+{% load static %} {% block content %}
+<!-- lightroom section -->
+<script type="text/x-template" id="lightroom">
+  <div class="lightroom-section" id="lightroom">
+    <div class="container">
+      <h1 class="header-section">Lightroom Presets</h1>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum, sit
+        impedit quaerat dolorum repellat sed aperiam modi voluptatibus veniam,
+        consequuntur rem quisquam aliquam itaque aspernatur ea placeat voluptas
+        tenetur doloremque maxime. Accusantium fugit doloribus quia ad recusandae
+        quos iure minus voluptatum aliquid nesciunt, repellendus veniam dicta
+        deserunt praesentium consectetur nobis?
+      </p>
+      <div class="row">
+        <div class="col-md-6 col-xs-12" v-for="item in items" :key="item.id">
+          <div class="lightroom-card rounded">
+            <div class="image-container">
+              <twenty-twenty style="diplay:block;"
+              :before="item.old_img"
+              :after="item.new_img" />
+            </div>
+              <div class="is_sale-lightroom rounded" v-if="item.discount_price">SALE</div>
+            <div class="lightroom-card__body">
+              <div class="row">
+                <div class="col-8">
+                  <h5 class="card-title">{ item.title }</h5>
+                </div>
+                <div class="col-4">
+                  <p class="right" v-if="item.is_free">Free</p>
+                  <p class="right" v-if="!item.is_free && item.discount_price">₱{ item.discount_price }</p>
+                  <div v-if="!item.is_free && !item.discount_price">{ item.price }</div>
+                </div>
+              </div>
+              <a :href="item.download_url" class="btn btn-primary" v-if="item.is_free">Download</a>
+              <button @click.prevent="addCart(item)" class="btn btn-primary" v-else>Add to cart</button>
+              <!-- <p class="card-text"> -->
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<!-- photoshop section -->
+<script type="text/x-template" id="photoshop-root">
+  <div class="photoshop-section" >
+    <div class="container">
+      <h1 class="header-section">Photoshop Templates</h1>
+      <p>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto, ipsa eum
+        dolorum voluptatem laudantium voluptate repellendus esse deserunt ipsum
+        natus aspernatur officiis tempore nesciunt? Ipsa placeat veniam,
+        aspernatur labore harum, commodi quo iste mollitia in fugiat veritatis
+        doloremque sit delectus, sequi incidunt! Molestiae aperiam in beatae,
+        dolorem atque laudantium aliquam?
+      </p>
+      <div class="row">
+        <div class="line-section"></div>
+        <div class="col-md-6 col-xs-12" v-for="item in items">
+          <div class="photoshop-card rounded">
+            <div class="image-container">
+              <img :src="item.new_img" class="responsive" />
+              <div class="is_sale rounded" v-if="item.discount_price &&  !item.is_free">SALE</div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-8">
+                  <h5 class="card-title">{ item.title }</h5>
+                </div>
+                <div class="col-4">
+                  <p class="right" v-if="item.is_free">Free</p>
+                  <div v-else-if="item.discount && !item.is_free">
+                    <p class="right" style="text-decoration: line-through">
+                      ₱{ item.price }
+                    </p>
+                    <p class="right">₱{ item.discount_price }</p>
+                  </div>
+                  <p class="right" v-else>₱{ item.price }</p>
+                </div>
+              </div>
+              <!-- <p class="card-text">
+                Some quick example text to build on the card title and make up the
+                bulk of the card's content.
+              </p> -->
+                <a :href="item.download_url" target="new" class="btn btn-primary" v-if="item.is_free">Download</a>
+              <button @click.prevent="addCart(item)" class="btn btn-primary" v-else>Add to cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<!-- cart view section -->
+<script type="text/x-template" id="cart-root">
+  <div>
+    <div class="navbar-adjustment"></div>
+  <div class="cart-section" >
+      <div class="container">
+          <div class="cart-steps">
+
+          </div>
+          <div class="row" v-for="cart in cart_items" :key="cart.id">
+              <div class="col-md-8 col-xs-12">
+                  <h1>Shopping Bag( {cart.total_items} )</h1>
+                  <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">items</th>
+                          <th scope="col">Unit Price</th>
+                          <th scope="col">Subtotal</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="item in cart.items" :key="item.id">
+                          <th scope="row">1</th>
+                          <td class="cart-item">
+                              <img class="shoppingcart-item-image" :src="item.new_img" alt="">
+                              <span class="cart-item-title ml-3">{ item.title }
+                              </span>
+                          </td>
+                          <td v-if="item.discount_price">${ item.discount_price }</td>
+                          <td v-else>${ item.price }</td>
+                          <td><b>$3,321</b></td>
+                        </tr>
+                      </tbody>
+                    </table>
+              </div>
+              <div class="col-md-4 col-xs-12">
+                  <h1>Order Summary</h1>
+                  <div class="order-summary">
+                      <form @submit.prevent="addCoupon" class="coupon-form">
+                        <input type="text" class="coupon-box" name="coupon" v-model="coupon" />
+                        <button class="btn btn-primary" >Add Coupon</button>
+                      </form>
+                      <div class="order-total">
+                        <span v-if="cart.coupon">Coupon:{cart.coupon}</span>
+                        <span>Subtotal:</span> <span class="right"><b>${ cart.total }</b></span>
+                        <hr class="breakline">
+                        <h4>Total:</h4><h4 class="right">${ cart.total }</h4>
+                      </div>
+
+                  </div>
+                  <button class="btn btn-primary w-100 mb-2">Proceed Checkout</button>
+                  <button class="btn btn-secondary w-100">Proceed Paypal</button>
+                  <div class="payment-details">
+                    <span class="text-muted">Secured payment.</span><br>
+                    <span class="text-muted">The file will automatically download when payment is done.</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  </div>
+</script>
+{% endblock content %}

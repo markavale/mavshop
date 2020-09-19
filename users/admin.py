@@ -11,12 +11,12 @@ class UserAdmin(UserAdmin):
     form = CustomUserChangeForm
     model = User
     list_display = ['email', 'username', 'first_name',
-                    'last_name', 'gender', 'is_staff']
+                    'last_name', 'is_staff']
     fieldsets = UserAdmin.fieldsets + (  # For Updating fields on Admin Panel
-        (('Additional Personal Info'), {'fields': ('gender','image')}),
+        (('Additional Personal Info'), {'fields': ('image',)}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (  # For Creating User on Admin Panel
-        (('Personal Info'), {'fields': ('last_name', 'first_name', 'email', 'gender','image',)}),
+        (('Personal Info'), {'fields': ('email','image',)}),
     )
 
 

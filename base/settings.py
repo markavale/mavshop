@@ -33,9 +33,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'debug_toolbar',
+    'taggit',
+    'taggit_serializer',
     #my apps
     'pages.apps.PagesConfig',
     'users.apps.UsersConfig',
+    'core.apps.CoreConfig',
 ]
 
 
@@ -81,6 +84,16 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mavshop',
+#         'USER': 'root',
+#         'PASSWORD': '@Mysql121598',
+#         'PORT':3306,
+#         'HOST':'127.0.0.1',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -133,9 +146,9 @@ AUTH_USER_MODEL = 'users.User'
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'pages:index'
 # https://django-allauth.readthedocs.io/en/latest/views.html#logout-account-logout
-LOGOUT_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'pages:index'
 
 
 # Internationalization
@@ -156,8 +169,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -28,25 +28,25 @@ class User(AbstractUser):
                            )],
         unique=True
     )
-    first_name = models.CharField(max_length=255, null=True, blank=False,
-                                  validators=[RegexValidator(regex=NAME_REGEX,
-                                                             message='First name must be letters only',
-                                                             code='invalid_first_name'
-                                                             )]
-                                  )
-    last_name = models.CharField(max_length=255, null=True, blank=False,
-                                 validators=[RegexValidator(regex=NAME_REGEX,
-                                                            message='Last name must be letters only',
-                                                            code='invalid_last_name'
-                                                            )]
-                                 )
+    # first_name = models.CharField(max_length=255, null=True, blank=False,
+    #                               validators=[RegexValidator(regex=NAME_REGEX,
+    #                                                          message='First name must be letters only',
+    #                                                          code='invalid_first_name'
+    #                                                          )]
+    #                               )
+    # last_name = models.CharField(max_length=255, null=True, blank=False,
+    #                              validators=[RegexValidator(regex=NAME_REGEX,
+    #                                                         message='Last name must be letters only',
+    #                                                         code='invalid_last_name'
+    #                                                         )]
+    #                              )
     # role = models.CharField(max_length=12, error_messages={
     #     'required': "Role must be provided"
     # })
     image = models.ImageField(default='default.jpg',
                               upload_to='avatar', null=True, blank=True)
-    gender = models.CharField(
-        max_length=10, blank=True, null=True, choices=GENDER_CHOICES, default="")
+    # gender = models.CharField(
+    #     max_length=10, blank=True, null=True, choices=GENDER_CHOICES, default="")
     email = models.EmailField(unique=True, blank=False,
                               error_messages={
                                   'unique': "A user with that email already exists.",

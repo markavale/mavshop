@@ -1,0 +1,111 @@
+{% load static %} {% block content %}
+<nav class="navbar navbar-expand-lg fixed-top shadow" id="navbar">
+  <div class="container-xl">
+    <a class="navbar-brand" href="#">MAV SHOP</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarText"
+      aria-controls="navbarText"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span
+        class="navbar-toggler-icon"
+        style="padding: 5px; color: #1f1f1f; font-size: 20px"
+        ><i class="fa fa-bars"></i
+      ></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#"
+            >Home <span class="sr-only">(current)</span></a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'core:photoshop' %}">Photoshop</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'core:lightroom' %}"
+            >Lightroom Preset</a
+          >
+        </li>
+      </ul>
+      <span class="navbar-text">
+        <span class="nav-item-right"
+          ><i class="fa fa-heart" aria-hidden="true"></i>
+        </span>
+        <span class="cart nav-item-right" id="cart"
+          ><a href="{% url 'pages:shopping-cart' %}"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+          <span
+            class="badge badge-warning"
+            id="lblCartCount"
+            v-if="cart_items.length==0"
+          >
+            { cart_items.length }
+          </span>
+          <span class="badge badge-warning" id="lblCartCount" v-else>
+            <span v-for="cart in cart_items" :key="cart.id">
+              { cart.total_items }
+            </span>
+          </span>
+          <div
+            class="cart-list shadow"
+            v-for="cart_item in cart_items"
+            :key="cart_item.id"
+            v-if="cart_item.total_items !== 0"
+          >
+            <div
+              class="cart-item-list"
+              v-for="item in cart_item.items"
+              :key="item.id"
+              
+            >
+              <div class="row">
+                <div class="col-4">
+                  <img :src="item.new_img" class="cart-item-image" alt="" />
+                </div>
+                <div class="col-8">
+                  <div class="cart-item-details">
+                    <span class="cart-item-title">{item.title}</span>
+                    <span
+                      class="cart-item-delete"
+                      @click.prevent="deleteCart(item)"
+                      ><i class="fa fa-trash"></i
+                    ></span>
+                    <h1 class="cart-item-price" v-if="item.discount_price">
+                      { item.discount_price }
+                    </h1>
+                    <span class="cart-item-title" v-if="item.discount_price"
+                      >amount save</span
+                    >
+                    <h1 class="cart-item-price" v-else>{ item.price }</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="cart-total shadow" v-if="cart_item.total_items == 0">
+              No item cart yet..
+            </div>
+            <div class="cart-total" v-else>
+              <span>subtotal</span><span>{ cart_item.total }</span><br />
+              <a href="#" class="btn btn-primary" style="width: 100%"
+                >Checkout</a
+              >
+            </div>
+          </div>
+          <div class="cart-list shadow" style="padding:10px;" v-if="cart_items.length ==0">
+            No item cart yet..
+          </div>         
+        </span>
+
+        <span class="nav-item-right"
+          ><i class="fa fa-user" aria-hidden="true"></i
+        ></span>
+      </span>
+    </div>
+  </div>
+</nav>
+{% endblock content %}

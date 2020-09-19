@@ -1,19 +1,66 @@
-{% load static %}
-{% block javascript %}
+{% load static %} {% comment %} Lightroom Section {% endcomment %}
+
+
 <!-- Bootstrap JavaScript -->
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+  integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+  crossorigin="anonymous"
+></script>
 
 <!-- Vue JS -->
-  <!-- for development  -->
-  <script src="{% static 'lib/js/vue.js' %}"></script> 
-  <!-- for production  -->
-  <!-- <script src="{% static 'lib/js/vue.min.js' %}"></script>   -->
-  
-  <!-- 3rd party JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous"></script>
-  
-  <!-- Project JS -->
-  <script src="{% static 'js/base.js' %}"></script>
-{% endblock javascript %}
+<!-- for development  -->
+{% comment %}
+<script src="{% static 'lib/js/vue.js' %}"></script>
+{% endcomment %} {% comment %}
+<script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
+{% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+<!-- for production  -->
+<!-- <script src="{% static 'lib/js/vue.min.js' %}"></script>   -->
+{% comment %}
+<script src="https://cdn.jsdelivr.net/npm/vue-twentytwenty@0.10.1/dist/vue-twentytwenty.common.min.js"></script>
+{% endcomment %}  
+<script src="//unpkg.com/vue@2/dist/vue.js"></script>
+<script src="//unpkg.com/vue-twentytwenty/dist/vue-twentytwenty.umd.min.js"></script>
+
+<!-- Image Comparison -->
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"
+></script>
+{% comment %} <script src="{% static 'lib/js/jquery.event.move.js' %}"></script>
+<script src="{% static 'lib/js/jquery.twentytwenty.js' %}"></script>
+<script>
+  $(function () {
+    $(".twentytwenty-container[data-orientation!='vertical']").twentytwenty({
+      default_offset_pct: 0.5,
+    });
+    $(".twentytwenty-container[data-orientation='vertical']").twentytwenty({
+      default_offset_pct: 0.3,
+      orientation: "vertical",
+    });
+  });
+</script> {% endcomment %}
+
+<!-- 3rd party JavaScript -->
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"
+  integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg=="
+  crossorigin="anonymous"
+></script>
+
+<!-- Project JS -->
+<script src="{% static 'js/base.js' %}"></script>
+<script type="module" src="{% static 'js/app.js' %}"></script>

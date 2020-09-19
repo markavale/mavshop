@@ -6,7 +6,7 @@
     name="viewport"
     content="width=device-width,minimum-scale=1,initial-scale=1"
   />
-  <title>{% block title %}Django App{% endblock title %}</title>
+  <title>Django App</title>
   <meta
     name="description"
     content="A framework for launching new Django projects quickly."
@@ -18,7 +18,6 @@
     href="{% static 'img/favicon.ico' %}"
   />
 
-  {% block css %}
   <!-- Bootstrap CSS -->
   <link
     rel="stylesheet"
@@ -27,6 +26,15 @@
     crossorigin="anonymous"
   />
 
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'lib/css/font-awesome.css' %}">
+  <link rel="stylesheet" href="{% static 'lib/css/font-awesome.min.css' %}">
+
+  <!-- Image Comparison -->
+  <!-- <link rel="stylesheet" href="{% static 'lib/css/twentytwenty-no-compass.css' %}"> -->
+  <link rel="stylesheet" href="{% static 'lib/css/twentytwenty.css' %}">
+  <link rel="stylesheet" href="{% static 'lib/scss/image-comparison.scss' %}">
+  <link rel="stylesheet" href="//unpkg.com/vue-twentytwenty/dist/vue-twentytwenty.css" />
+
   <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-  {% endblock %}
 </head>
