@@ -31,13 +31,11 @@ class CouponSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     items = ItemSerializer(many=True, read_only=True)
     total = serializers.CharField(source='get_total', read_only=True)
+    sub_total = serializers.CharField(source='get_sub_total', read_only=True)
     total_items = serializers.CharField(
         source='get_total_items', read_only=True)
 
     class Meta:
         model = Order
         fields = '__all__'
-        # ('user','ref_code','items','start_date','ordered_date',
-        #         'ordered','coupon','purchased','refund_requested',
-        #     'refund_granted',)
         depth = 1

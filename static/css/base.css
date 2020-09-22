@@ -171,23 +171,52 @@ tbody {
   padding: 10px 15px;
   margin: 20px 0;
 }
-.coupon-form{
-  display:flex;
+.coupon-form {
+  display: flex;
   margin: 10px 0;
+  width: auto;
 }
-.coupon-form > input,button{
-  height:40px;
-  padding:auto 8px;
+.coupon-form > input,
+button {
+  height: 40px;
+  padding: auto 8px;
 }
-.order-total{
+.order-total {
   background-color: white;
   padding: 10px 20px;
-  display:block;
+  display: block;
   text-align: left;
 }
-.breakline{
+.breakline {
   border-top: 2px dashed rgb(206, 206, 206);
   /* border-style: ; */
+}
+.flex-items {
+  display: inline-flex;
+}
+.flex-items__item {
+  margin: 3px 8px;
+}
+
+/* login section */
+.login-section {
+  background-color: #f7f7f7;
+  margin-bottom:35px;
+}
+.login-register {
+  background-color: white;
+  margin: 35px 80px;
+  padding: 42px 0 42px 0;
+}
+.register-container{
+  display:block;
+}
+.form-container{
+  /* display:table-row; */
+}
+.input-form {
+  border: none;
+  border-bottom: 2px solid #cecece;
 }
 
 /* Photoshop Templates section */

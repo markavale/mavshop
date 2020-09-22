@@ -126,25 +126,39 @@
                           </td>
                           <td v-if="item.discount_price">${ item.discount_price }</td>
                           <td v-else>${ item.price }</td>
-                          <td><b>$3,321</b></td>
+                          <td v-if="item.discount_price"><b>${item.discount_price}</b></td>
+                          <td v-else><b>${item.price}</b></td>
                         </tr>
                       </tbody>
                     </table>
+                    <div class="extra-items" >
+                      <h3>You Might Also Like</h3>
+                      <hr>
+                      <div class="flex-items">
+                        <div class="flex-items__item" v-for="extra in extra_items" :key="extra.id">
+                          <img class="shoppingcart-item-image" :src="extra.new_img" alt="">
+                          <h5>{ extra.price }</h5>
+                        </div>
+                      </div>
+                    </div>
               </div>
               <div class="col-md-4 col-xs-12">
                   <h1>Order Summary</h1>
-                  <div class="order-summary">
+                  <div class="order-summary"> 
                       <form @submit.prevent="addCoupon" class="coupon-form">
-                        <input type="text" class="coupon-box" name="coupon" v-model="coupon" />
+                        <input type="text" class="coupon-box" name="code" v-model="coupon" />
                         <button class="btn btn-primary" >Add Coupon</button>
                       </form>
                       <div class="order-total">
-                        <span v-if="cart.coupon">Coupon:{cart.coupon}</span>
-                        <span>Subtotal:</span> <span class="right"><b>${ cart.total }</b></span>
+                        <span>Subtotal:</span> <span class="right"><b>${ cart.sub_total }</b></span>
                         <hr class="breakline">
-                        <h4>Total:</h4><h4 class="right">${ cart.total }</h4>
+                        <div class="coupon" v-if="cart.coupon">
+                          <span>Coupon:</span>
+                          <span class="right"><b>-${cart.coupon.amount}</b></span>
+                        </div>
+                        <hr class="breakline">
+                        <span style="font-size:18px;">Total:</span><span class="right" style="font-size:20px;"><b>${cart.total}</b></span>
                       </div>
-
                   </div>
                   <button class="btn btn-primary w-100 mb-2">Proceed Checkout</button>
                   <button class="btn btn-secondary w-100">Proceed Paypal</button>
@@ -157,5 +171,45 @@
       </div>
   </div>
   </div>
+</script>
+
+<script type="text/x-template" id="login-register">
+  <div class="login-section">
+    <div class="navbar-adjustment"></div>
+    <div class="login-register">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <div class="login-container">
+                        <h1>Sign in</h1>
+                        <form @submit.prevent="login">
+                            <label for="email">Email Address</label>
+                            <input class="input-form" type="text" v-model="user.email"><br>
+                            <label for="username">Username</label>
+                            <input class="input-form" type="text" v-model="user.username"><br>
+                            <label for="passwrord">Password</label>
+                            <input class="input-form" type="text" v-model="user.password"><br>
+                            <button class="btn btn-secondary">Sign in</button>
+                            </form>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <div class="register-container">
+                        <h1>Register</h1>
+                        <form class="form-container">
+                        <label for="email">Email Address</label>
+                        <input class="input-form" type="text"><br>
+                        <label for="username">Username</label>
+                        <input class="input-form" type="text"><br>
+                        <label for="email">Password</label>
+                        <input class="input-form" type="password"><br>
+                        <button>Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </script>
 {% endblock content %}

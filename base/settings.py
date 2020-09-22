@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+from decouple import config
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
@@ -11,10 +12,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 's@bw@s*__qjbug14h0=x4j+pv)a6an&m745&s39!84#pifv)+!'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG',cast=bool, default=True)
 
 ALLOWED_HOSTS = []
 
@@ -28,10 +29,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     #3rd party
+    'allauth',
+    'allauth.account',
+    #'allauth.socialaccount',
+    'dj_rest_auth.registration',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth',
+    'dj_rest_auth',
+     #'rest_auth',
     'debug_toolbar',
     'taggit',
     'taggit_serializer',
@@ -41,6 +48,20 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
 ]
 
+# DJANGO RESTFRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ], 
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -84,16 +105,20 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'mavshop',
-#         'USER': 'root',
-#         'PASSWORD': '@Mysql121598',
-#         'PORT':3306,
-#         'HOST':'127.0.0.1',
-#     }
-# }
+
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('NAME'),
+        'USER': config('USER'),
+        'PASSWORD': config('PASSWORD'),
+        'PORT':config('PORT', cast=int),
+        'HOST':config('HOST'),
+        #'SSL':
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -112,19 +137,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+        
 
-# DJANGO RESTFRAMEWORK
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    )
-}
 
 # DJANGO DEBUG TOOLBAR CONFIGS
 INTERNAL_IPS = [
@@ -145,6 +159,13 @@ AUTH_USER_MODEL = 'users.User'
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
+#email backends
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#authentication backends REQURED!!!
+AUTHENTICATION_BACKENDS = (
+   "django.contrib.auth.backends.ModelBackend",
+   "allauth.account.auth_backends.AuthenticationBackend"
+)
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
 LOGIN_REDIRECT_URL = 'pages:index'
 # https://django-allauth.readthedocs.io/en/latest/views.html#logout-account-logout
@@ -175,7 +196,36 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+LOGGING ={
+    'version':1,
+    'loggers':{
+        'django':{
+            'handlers':['file','file2'],
+            'level':'DEBUG'
+        }
+    },
+    'handlers':{
+        'file':{
+            'level':'INFO',
+            'class': 'logging.FileHandler',
+            'filename':'./logs/debug5.log',
+            'formatter':'simpleRe',
+        },
+        'file2':{
+            'level':'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename':'./logs/debug6.log',
+            'formatter':'simpleRe',
+        }
+    },
+    'formatters':{
+        'simpleRe': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        }
 
+    }
+}
 
 if ENVIRONMENT == 'production':
     DEBUG = False

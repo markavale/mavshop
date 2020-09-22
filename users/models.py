@@ -19,6 +19,7 @@ GENDER_CHOICES = (
 
 
 class User(AbstractUser):
+    ip_address      = models.GenericIPAddressField(null=True)
     username = models.CharField(
         max_length=150,
         validators=[
@@ -28,21 +29,6 @@ class User(AbstractUser):
                            )],
         unique=True
     )
-    # first_name = models.CharField(max_length=255, null=True, blank=False,
-    #                               validators=[RegexValidator(regex=NAME_REGEX,
-    #                                                          message='First name must be letters only',
-    #                                                          code='invalid_first_name'
-    #                                                          )]
-    #                               )
-    # last_name = models.CharField(max_length=255, null=True, blank=False,
-    #                              validators=[RegexValidator(regex=NAME_REGEX,
-    #                                                         message='Last name must be letters only',
-    #                                                         code='invalid_last_name'
-    #                                                         )]
-    #                              )
-    # role = models.CharField(max_length=12, error_messages={
-    #     'required': "Role must be provided"
-    # })
     image = models.ImageField(default='default.jpg',
                               upload_to='avatar', null=True, blank=True)
     # gender = models.CharField(
@@ -52,23 +38,14 @@ class User(AbstractUser):
                                   'unique': "A user with that email already exists.",
                               })
 
-    USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ['email',]
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ['username',]
 
     def __str__(self):
         return self.username
 
-    #objects = UserManager()
-
     def get_total_user(self):
         return self.User.objects.all().count()
-
-    # def get_age(self):
-    #     current_year = datetime.date.today().year
-    #     dateofbirth_year = self.birthday.year
-    #     if dateofbirth_year:
-    #         return current_year - dateofbirth_year
-    #     return
 
     def get_user_type(self):
         if self.is_admin:

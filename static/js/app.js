@@ -1,4 +1,5 @@
 var local_url = "http://localhost:8000";
+var csrftoken = Cookies.get("csrftoken");
 
 let navItemCart = Vue.component("nav-cart-item", {
   name: "nav-cart-item",
@@ -7,6 +8,7 @@ let navItemCart = Vue.component("nav-cart-item", {
   data() {
     return {
       cart_items: [],
+      token:null,
     };
   },
   mounted() {
@@ -16,12 +18,17 @@ let navItemCart = Vue.component("nav-cart-item", {
   },
   methods: {
     getCartItems() {
+      this.token = localStorage.getItem('user-token');
       axios({
         method: "GET",
         url: `${local_url}/api/cart-list`,
+        headers:{
+          "Authorization": `Token ${this.token}`,
+        },
       })
         .then((res) => {
           this.cart_items = res.data;
+          console.log(this.token)
         })
         .catch((err) => console.log(err));
     },
@@ -115,35 +122,53 @@ let CartComponent = Vue.component("cart-component", {
   data() {
     return {
       cart_items: [],
+      extra_items: [],
       is_loading: false,
       message: "",
       coupon: null,
+      token:null,
     };
   },
   mounted() {
     this.getCartItems();
+    this.getExtraItems();
   },
   methods: {
+    
     getCartItems() {
+      this.token= localStorage.getItem('user-token');
       axios({
         method: "GET",
         url: `${local_url}/api/cart-list`,
+        Authorization: `Token ${this.token}`
       })
         .then((res) => {
           this.cart_items = res.data;
+          console.log(this.token);
+        })
+        .catch((err) => console.log(err));
+    },
+    getExtraItems() {
+      axios({
+        method: "GET",
+        url: `${local_url}/api/extra-items`,
+      })
+        .then((res) => {
+          this.extra_items = res.data;
+          console.log("Success for get extra items");
         })
         .catch((err) => console.log(err));
     },
     addCoupon() {
       axios({
         method: "POST",
-        url: `${local_url}/api/get-coupon/${this.coupon}`,
+        url: `${local_url}/api/add-coupon/${this.coupon}`,
         data: {
-          coupon: this.coupon
+          coupon: this.coupon,
         },
         headers: {
-          "X-CSRFToken": "{{ csrf_token }}",
-          "content-type": "application/json",
+          "X-CSRFToken": csrftoken,
+          //"content-type": "application/json",
         },
       })
         .then((res) => {
@@ -151,6 +176,53 @@ let CartComponent = Vue.component("cart-component", {
           console.log(res.data);
         })
         .catch((err) => console.log(err));
+    },
+  },
+});
+
+var LoginRegister = Vue.component("login-register", {
+  name: "Login-Register",
+  template: "#login-register",
+  delimiters: ["{", "}"],
+  data() {
+    return {
+      user:{
+        username:"",
+        email:"",
+        password:"",
+        errors:[],
+      },
+    };
+  },
+  mounted() {},
+  methods: {
+    login() {
+      axios({
+        method: "POST",
+        url: `${local_url}/auth/login/`,
+        data: {
+          username: this.user.username,
+          email: this.user.email,
+          password: this.user.password,
+        },
+        headers: {
+          "X-CSRFToken": csrftoken,
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
+        const token = res.data.key;
+        localStorage.setItem("user-token", token); // store the token in localstorage
+        this.user.username = "";
+        this.user.email = "";
+        this.user.password = "";
+        //this.$router.push('/');
+        window.location.href = "/";
+      })
+      .catch(err =>{
+        localStorage.removeItem('user-token');
+        console.log(err);
+        this.user.errors = err.data;
+      });
     },
   },
 });
@@ -164,6 +236,7 @@ new Vue({
     "nav-cart-item": navItemCart,
     photoshop: PhotoshopComp,
     cart: CartComponent,
+    login:LoginRegister,
   },
   data: {
     message: "TESTSETSETSET",

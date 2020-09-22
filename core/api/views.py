@@ -1,17 +1,19 @@
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponse, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 # , OrderItemSerializer
 from . serializers import OrderSerializer, ItemSerializer, CouponSerializer
 from core.models import Item, Order, Coupon  # , OrderItem
-from .permissions import AllowPost
+from .permissions import AllowPost, ReadOnly, IsMemberOrIpAddressOnly
 
-
-@permission_classes([AllowAny, ])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsMemberOrIpAddressOnly, ])
 @api_view(['GET', 'POST'])
 def order_list(request):
     if request.method == "GET":
@@ -27,6 +29,27 @@ def order_list(request):
 
 
 @permission_classes([AllowAny, ])
+@api_view(['GET', ])
+def get_extra_order(request):
+    if request.method == "GET":
+        get_items = []
+        lightroom_items = Item.objects.filter(
+             is_free=False)
+        orders = Order.objects.filter(user=request.user, ordered=False)
+        if orders.exists():
+            order_qs = orders[0]
+            for item in lightroom_items:
+                if item in order_qs.items.all():
+                    pass
+                    print(item)
+                else:
+                    get_items.append(item)
+                    print(get_items)
+            serializer = ItemSerializer(get_items, many=True)
+            return Response(serializer.data)
+
+
+@permission_classes([AllowAny, ])
 @api_view(['GET', 'POST'])
 def item_list(request):
     if request.method == "GET":
@@ -34,8 +57,8 @@ def item_list(request):
         serializer = ItemSerializer(queryset, many=True)
         return Response(serializer.data)
 
-
-@permission_classes([AllowAny, ])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsMemberOrIpAddressOnly,])
 @api_view(['GET', 'POST'])
 def lightroom_list(request):
     if request.method == "GET":
@@ -43,8 +66,8 @@ def lightroom_list(request):
         serializer = ItemSerializer(queryset, many=True)
         return Response(serializer.data)
 
-
-@permission_classes([AllowAny, ])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsMemberOrIpAddressOnly,])
 @api_view(['GET', 'POST'])
 def photoshop_list(request):
     if request.method == "GET":
@@ -96,42 +119,18 @@ def add_to_cart(request, slug):
     return Response(data)
 
 
-@permission_classes([AllowAny, ])
-@api_view(['GET', ])
-def add_coupon(request):
-    coupons = Coupon.objects.all()
-    serializer = CouponSerializer(coupons, many=True)
-    return Response(serializer.data)
+class AddCouponView(APIView):
+    permission_classes = [IsAuthenticated, ]
 
-
-@permission_classes([IsAuthenticated, ])
-@api_view(['GET', 'POST', ])
-def activate_coupon(request, code):
-    try:
-        order = Order.objects.filter(user=request.user, ordered=False)
-        coupon_code = Coupon.objects.get(code=code)
-        data = {}
-        print(code)
-        if request.method == "POST":
-            serializer = OrderSerializer(order, data=request.data)
-            if serializer.is_valid():
-                serializer.coupon = code
-                print(serializer)
-                data['coupon'] = "Coupon Code was activated"
-                serializer.save()
-                return Response(serializer.data)
-            else:
-                print("err")
-
-    except ObjectDoesNotExist:
-        # data['coupon'] = "{} does not exist.".format(code)
-        print("{} does not exist.".format(code))
-
-    except ValueError:
-        data['coupon'] = "{} does not exist.".format(code)
-        print("{} does not exist.".format(code))
-
-    return Response(data)
+    def post(self, request, code):
+        coupon = get_object_or_404(Coupon, code=code)
+        if coupon is None:
+            return Response({"message": "Invalid data received"}, status=status.HTTP_400_BAD_REQUEST)
+        order = Order.objects.get(
+            user=self.request.user, ordered=False)
+        order.coupon = coupon
+        order.save()
+        return Response(status=status.HTTP_200_OK)
 
 
 @permission_classes([AllowAny, ])
@@ -142,29 +141,10 @@ def remove_to_cart(request, slug):
     data = {}
     if order_qs.exists():
         order = order_qs[0]
-        item_in_cart = False
-        for obj in order.items.all():
-            if obj.slug == item.slug:
-                item_in_cart = True
-            else:
-                item_in_cart = False
-        if item_in_cart:
-            order.items.remove(item)
-            data['message'] = "{} was removed from your cart.".format(
-                item.title)
-            return Response(data)
-        else:
-            data['message'] = "{} was not in your cart.".format(item.title)
-            return Response(data)
-
-        # for obj in order.items.all():
-        #     if obj.slug == item.slug:
-        #         obj.remove(item)
-        #         data['message'] = "{} was remove from your cart.".format(item.title)
-        #         return Response(data)
-        #     else:
-        #         data['message'] = "{} was already removed from your cart.".format(item.title)
-        #         return Response(data)
+        order.items.remove(item)
+        data['message'] = "{} was removed from your cart.".format(
+            item.title)
+        return Response(data)
     else:
         data['message'] = "You do not have an active order."
         print("{} was not in your cart".format(item.title))
